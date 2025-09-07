@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>모기없는세상 🔮</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #0c0a18;
+        --primary-glow: #6a5af9;
+        --secondary-glow: #a15cff;
+        --warning-glow: #ffc45c;
+        --danger-glow: #ff5c5c;
+        --text-color: #e0e0e0;
+        --text-muted: #8b8b9a;
+        --card-bg: rgba(26, 24, 46, 0.6);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Pretendard", sans-serif;
+        background: var(--bg-color);
+        background-image: radial-gradient(
+            circle at 20% 20%,
+            var(--primary-glow) 0%,
+            transparent 25%
+          ),
+          radial-gradient(
+            circle at 80% 70%,
+            var(--secondary-glow) 0%,
+            transparent 20%
+          );
+        background-repeat: no-repeat;
+        color: var(--text-color);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        overflow-x: hidden;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 700px;
+        text-align: center;
+      }
+
+      header {
+        margin-bottom: 40px;
+        animation: fadeIn 1s ease-out;
+      }
+
+      h1 {
+        font-size: 36px;
+        font-weight: 700;
+        letter-spacing: -1px;
+        background: linear-gradient(
+          90deg,
+          var(--primary-glow),
+          var(--secondary-glow)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 8px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+        color: var(--text-muted);
+      }
+
+      .scanner {
+        width: 300px;
+        height: 300px;
+        margin: 0 auto 30px;
+        position: relative;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(106, 90, 249, 0.1) 0%,
+          transparent 70%
+        );
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.4s ease;
+      }
+
+      .scanner::before,
+      .scanner::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        pointer-events: none;
+      }
+
+      .scanner::before {
+        width: 100%;
+        height: 100%;
+        border: 2px solid var(--primary-glow);
+        opacity: 0.5;
+        animation: pulse 3s infinite ease-out;
+      }
+
+      .scanner::after {
+        width: calc(100% + 20px);
+        height: calc(100% + 20px);
+        border: 1px dashed var(--text-muted);
+        opacity: 0.3;
+      }
+
+      .scanner.warning {
+        background: radial-gradient(
+          circle,
+          rgba(255, 196, 92, 0.15) 0%,
+          transparent 70%
+        );
+      }
+
+      .scanner.warning::before {
+        border-color: var(--warning-glow);
+        animation-duration: 1.5s;
+      }
+
+      .scanner.danger {
+        background: radial-gradient(
+          circle,
+          rgba(255, 92, 92, 0.2) 0%,
+          transparent 70%
+        );
+      }
+
+      .scanner.danger::before {
+        border-color: var(--danger-glow);
+        animation-duration: 0.8s;
+      }
+
+      .scanner-core {
+        width: 60%;
+        height: 60%;
+        background: var(--bg-color);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5) inset;
+        position: relative;
+      }
+
+      #mosquito-icon {
+        font-size: 64px;
+        transition: transform 0.3s ease;
+        filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
+      }
+
+      #mosquito-icon.active-1 {
+        transform: scale(1.1) rotate(-5deg);
+      }
+
+      #mosquito-icon.active-2 {
+        transform: scale(1.2) rotate(8deg);
+      }
+
+      #mosquito-icon.active-3 {
+        transform: scale(1.3) rotate(-12deg);
+      }
+
+      /* 모기가 고통스러워하는 애니메이션 */
+      #mosquito-icon.pained {
+        animation: pained-shake 0.8s ease-in-out;
+      }
+
+      /* 상호작용 효과 컨테이너 */
+      #interaction-effects {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .effect {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 40px;
+        opacity: 0;
+        transform-origin: center;
+      }
+
+      /* 살충제 효과 */
+      .spray-effect {
+        animation: spray-fly-out 0.8s ease-out;
+      }
+
+      /* 고주파 효과 */
+      .wave-effect {
+        animation: wave-expand 0.8s ease-out;
+      }
+
+      .control-panel {
+        background: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 25px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        margin-bottom: 30px;
+        animation: fadeIn 1s ease-out 0.2s backwards;
+      }
+
+      #status-display {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: var(--text-muted);
+        transition: color 0.3s ease;
+      }
+
+      #status-display.active {
+        color: var(--text-color);
+      }
+
+      .button-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+
+      .btn {
+        background: none;
+        border: 1px solid var(--primary-glow);
+        color: var(--primary-glow);
+        padding: 12px 20px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+
+      .btn:hover:not(:disabled) {
+        background-color: var(--primary-glow);
+        color: white;
+        box-shadow: 0 0 20px rgba(106, 90, 249, 0.5);
+      }
+
+      .btn.stop-btn {
+        border-color: var(--warning-glow);
+        color: var(--warning-glow);
+      }
+
+      .btn.stop-btn:hover:not(:disabled) {
+        background-color: var(--warning-glow);
+        color: var(--bg-color);
+        box-shadow: 0 0 20px rgba(255, 196, 92, 0.5);
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .results-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        animation: fadeIn 1s ease-out 0.4s backwards;
+      }
+
+      .result-card {
+        background: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 20px;
+        text-align: left;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .result-card.active {
+        border-color: var(--primary-glow);
+        box-shadow: 0 0 20px rgba(106, 90, 249, 0.3);
+        transform: translateY(-5px);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .class-name {
+        font-weight: 600;
+        font-size: 16px;
+      }
+
+      .class-icon {
+        font-size: 24px;
+      }
+
+      .probability-bar {
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        margin-top: 5px;
+      }
+
+      .probability-fill {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          var(--primary-glow),
+          var(--secondary-glow)
+        );
+        border-radius: 3px;
+        transition: width 0.5s ease-out;
+      }
+
+      .error {
+        background: rgba(255, 92, 92, 0.2);
+        border: 1px solid var(--danger-glow);
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 20px;
+        color: #ffcfcf;
+        font-weight: 500;
+      }
+
+      /* 애니메이션 */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: translate(-50%, -50%) scale(0.95);
+          opacity: 0.5;
+        }
+        70% {
+          transform: translate(-50%, -50%) scale(1.1);
+          opacity: 0;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(0.95);
+          opacity: 0;
+        }
+      }
+
+      @keyframes pained-shake {
+        0%,
+        100% {
+          transform: scale(1.3) rotate(-12deg);
+        }
+        10%,
+        90% {
+          transform: scale(1.3) translate(-8px, 2px) rotate(-15deg);
+        }
+        30%,
+        70% {
+          transform: scale(1.3) translate(8px, -2px) rotate(-5deg);
+        }
+        50% {
+          transform: scale(1.3) translate(0, 0) rotate(-12deg);
+          filter: blur(1px);
+        }
+      }
+
+      @keyframes spray-fly-out {
+        0% {
+          transform: translate(-50%, -50%) scale(0.5);
+          opacity: 1;
+        }
+        100% {
+          transform: var(--transform-end) scale(1.5);
+          opacity: 0;
+        }
+      }
+
+      @keyframes wave-expand {
+        0% {
+          transform: translate(-50%, -50%) scale(0);
+          opacity: 0.8;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(2.5);
+          opacity: 0;
+        }
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 28px;
+        }
+        .subtitle {
+          font-size: 14px;
+        }
+        .scanner {
+          width: 220px;
+          height: 220px;
+        }
+        #mosquito-icon {
+          font-size: 48px;
+        }
+        .button-group {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>모기없는세상</h1>
+        <p class="subtitle">AI 음향 분석으로 당신의 공간을 보호하세요.</p>
+      </header>
+
+      <div class="scanner" id="scanner">
+        <div class="scanner-core">
+          <span id="mosquito-icon">🦟</span>
+          <div id="interaction-effects"></div>
+        </div>
+      </div>
+
+      <div class="control-panel">
+        <div id="status-display">
+          <span id="status-icon">🔮</span>
+          <span id="status-text">버튼을 눌러 탐지를 시작하세요.</span>
+        </div>
+        <div class="button-group">
+          <button class="btn" id="startBtn" onclick="init()">탐지 시작</button>
+          <button
+            class="btn stop-btn"
+            id="stopBtn"
+            onclick="stopDetection()"
+            disabled
+          >
+            탐지 중지
+          </button>
+        </div>
+        <div id="error-container"></div>
+      </div>
+
+      <div class="results-grid" id="label-container"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.5.4/dist/speech-commands.min.js"></script>
+    <script>
+      const URL = window.location.origin + "/my_model/";
+      let recognizer = null;
+      let isAttacking = false;
+      let classLabels = [];
+      let audioContext;
+
+      const startBtn = document.getElementById("startBtn");
+      const stopBtn = document.getElementById("stopBtn");
+      const statusIcon = document.getElementById("status-icon");
+      const statusText = document.getElementById("status-text");
+      const statusDisplay = document.getElementById("status-display");
+      const errorContainer = document.getElementById("error-container");
+      const scanner = document.getElementById("scanner");
+      const mosquitoIcon = document.getElementById("mosquito-icon");
+      const effectsContainer = document.getElementById("interaction-effects");
+      const labelContainer = document.getElementById("label-container");
+
+      /**
+       * 모기 퇴치용 고주파 사운드 생성 함수
+       */
+      function triggerRepelSound() {
+        if (!audioContext) {
+          audioContext = new (window.AudioContext ||
+            window.webkitAudioContext)();
+        }
+
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        // 모기가 싫어하는 고주파 (17.5kHz)
+        oscillator.frequency.setValueAtTime(17500, audioContext.currentTime);
+        oscillator.type = "sine";
+
+        // 볼륨 조절
+        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 1.5);
+      }
+
+      /**
+       * 개선된 상호작용 함수
+       * 살충제 또는 고주파 효과를 무작위로 생성합니다.
+       */
+      function triggerInteraction() {
+        if (isAttacking) return;
+        isAttacking = true;
+
+        triggerRepelSound(); // 고주파 재생
+        mosquitoIcon.classList.add("pained"); // 모기 고통 애니메이션
+
+        // 50% 확률로 다른 효과 적용
+        const effectType = Math.random() > 0.5 ? "spray" : "wave";
+
+        if (effectType === "spray") {
+          // 살충제 효과: 4개의 연기 아이콘을 각기 다른 방향으로 분사
+          for (let i = 0; i < 4; i++) {
+            const spray = document.createElement("span");
+            spray.textContent = "💨";
+            spray.className = "effect spray-effect";
+
+            const angle = Math.random() * 360;
+            const distance = 80 + Math.random() * 40;
+            const x = Math.cos((angle * Math.PI) / 180) * distance;
+            const y = Math.sin((angle * Math.PI) / 180) * distance;
+
+            spray.style.setProperty(
+              "--transform-end",
+              `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`
+            );
+
+            effectsContainer.appendChild(spray);
+            setTimeout(() => spray.remove(), 800);
+          }
+        } else {
+          // 고주파 효과: 파동 아이콘이 퍼져나감
+          const wave = document.createElement("span");
+          wave.textContent = "〰️";
+          wave.className = "effect wave-effect";
+          effectsContainer.appendChild(wave);
+          setTimeout(() => wave.remove(), 800);
+        }
+
+        setTimeout(() => {
+          mosquitoIcon.classList.remove("pained");
+          isAttacking = false;
+        }, 800);
+      }
+
+      function updateStatus(message, icon) {
+        statusText.textContent = message;
+        statusIcon.textContent = icon;
+        statusDisplay.classList.toggle("active", icon === "👂");
+      }
+
+      function showError(message) {
+        errorContainer.innerHTML = message
+          ? `<div class="error">${message}</div>`
+          : "";
+      }
+
+      function createClassUI(labels) {
+        labelContainer.innerHTML = "";
+        labels.forEach((label, index) => {
+          if (label === "_background_noise_") return;
+
+          const card = document.createElement("div");
+          card.className = "result-card";
+          card.id = `class-${index}`;
+
+          let icon = "🔊";
+          if (label.toLowerCase().includes("모기")) icon = "🦟";
+          else if (label.toLowerCase().includes("조용")) icon = "🤫";
+
+          card.innerHTML = `
+                    <div class="card-header">
+                        <span class="class-name">${label}</span>
+                        <span class="class-icon">${icon}</span>
+                    </div>
+                    <div>
+                        <span class="probability-value" id="prob-value-${index}">0%</span>
+                        <div class="probability-bar">
+                            <div class="probability-fill" id="prob-fill-${index}"></div>
+                        </div>
+                    </div>
+                `;
+          labelContainer.appendChild(card);
+        });
+      }
+
+      async function createModel() {
+        try {
+          const speechRecognizer = speechCommands.create(
+            "BROWSER_FFT",
+            undefined,
+            URL + "model.json",
+            URL + "metadata.json"
+          );
+          await speechRecognizer.ensureModelLoaded();
+          return speechRecognizer;
+        } catch (error) {
+          throw new Error(`AI 모델 로드 실패: ${error.message}`);
+        }
+      }
+
+      async function init() {
+        showError("");
+        updateStatus("AI 모델을 준비 중입니다...", "⏳");
+        startBtn.disabled = true;
+
+        try {
+          recognizer = await createModel();
+          classLabels = recognizer.wordLabels();
+          createClassUI(classLabels);
+
+          updateStatus("마이크 권한을 허용해주세요.", "🎤");
+
+          recognizer.listen((result) => handlePrediction(result.scores), {
+            includeSpectrogram: true,
+            probabilityThreshold: 0,
+            invokeCallbackOnNoiseAndUnknown: true,
+            overlapFactor: 0.75,
+          });
+
+          stopBtn.disabled = false;
+          updateStatus("주변 소리를 듣고 있습니다.", "👂");
+        } catch (error) {
+          showError(error.message);
+          updateStatus("오류 발생. 다시 시도해주세요.", "⚠️");
+          startBtn.disabled = false;
+        }
+      }
+
+      function stopDetection() {
+        if (recognizer && recognizer.isListening()) {
+          recognizer.stopListening();
+          startBtn.disabled = false;
+          stopBtn.disabled = true;
+          updateStatus("탐지가 중지되었습니다.", "🔮");
+          resetUIState();
+        }
+      }
+
+      function handlePrediction(scores) {
+        const probabilities = Array.from(scores);
+        let maxIndex = probabilities.indexOf(Math.max(...probabilities));
+        updateResultsUI(probabilities, maxIndex);
+
+        const mosquitoIndex = classLabels.findIndex((label) =>
+          label.toLowerCase().includes("모기")
+        );
+
+        if (mosquitoIndex !== -1) {
+          const mosquitoProb = probabilities[mosquitoIndex];
+          updateScannerUI(mosquitoProb);
+
+          if (mosquitoProb > 0.92) {
+            triggerInteraction(); // 모기 탐지 시 상호작용 실행
+          }
+        }
+      }
+
+      function updateResultsUI(probabilities, maxIndex) {
+        classLabels.forEach((label, i) => {
+          if (label === "_background_noise_") return;
+
+          const probPercent = (probabilities[i] * 100).toFixed(1);
+          const probValue = document.getElementById(`prob-value-${i}`);
+          const probFill = document.getElementById(`prob-fill-${i}`);
+          const card = document.getElementById(`class-${i}`);
+
+          if (probValue && probFill && card) {
+            probValue.textContent = `${probPercent}%`;
+            probFill.style.width = `${probPercent}%`;
+            card.classList.toggle("active", i === maxIndex);
+          }
+        });
+      }
+
+      function updateScannerUI(prob) {
+        mosquitoIcon.classList.remove("active-1", "active-2", "active-3");
+        scanner.classList.remove("warning", "danger");
+
+        // 더 민감한 반응을 위해 임계값 조정
+        if (prob > 0.7) {
+          // 원래 0.9
+          mosquitoIcon.classList.add("active-3");
+          scanner.classList.add("danger");
+        } else if (prob > 0.5) {
+          // 원래 0.8
+          mosquitoIcon.classList.add("active-2");
+          scanner.classList.add("warning");
+        } else if (prob > 0.3) {
+          // 원래 0.7
+          mosquitoIcon.classList.add("active-1");
+        }
+      }
+
+      function resetUIState() {
+        scanner.className = "scanner";
+        mosquitoIcon.className = "";
+        document
+          .querySelectorAll(".result-card")
+          .forEach((c) => c.classList.remove("active"));
+        document
+          .querySelectorAll(".probability-fill")
+          .forEach((f) => (f.style.width = "0%"));
+        document
+          .querySelectorAll(".probability-value")
+          .forEach((v) => (v.textContent = "0%"));
+      }
+    </script>
+  </body>
+</html>
