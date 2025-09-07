@@ -75,22 +75,21 @@
       }
 
       .subtitle-container {
-        height: 20px; /* 한 줄 텍스트 높이에 맞춤 */
+        height: 40px; /* An item height */
         overflow: hidden;
         position: relative;
       }
 
       .subtitle-slider {
-        animation: slide-phrases 12s infinite ease-in-out;
+        animation: slide-phrases 10s infinite ease-in-out;
       }
 
       .subtitle {
         font-size: 16px;
         color: var(--text-muted);
-        height: 20px;
-        line-height: 20px;
+        height: 40px; /* Set a fixed height for each item */
+        line-height: 40px; /* Vertically center text in the given height */
         margin: 0;
-        padding-bottom: 20px; /* 문장 사이의 간격 */
       }
 
       .scanner {
@@ -379,18 +378,18 @@
         0% {
           transform: translateY(0);
         }
-        41% {
+        45% {
           transform: translateY(0);
-        } /* 5초 대기 */
+        } /* Wait on phrase 1 */
         50% {
           transform: translateY(-40px);
-        } /* 1초 슬라이드 */
-        91% {
+        } /* Slide to phrase 2 */
+        95% {
           transform: translateY(-40px);
-        } /* 5초 대기 */
+        } /* Wait on phrase 2 */
         100% {
           transform: translateY(-80px);
-        } /* 1초 슬라이드 (루프) */
+        } /* Slide to looped phrase 1 */
       }
 
       @keyframes pulse {
