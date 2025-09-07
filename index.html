@@ -74,9 +74,23 @@
         margin-bottom: 8px;
       }
 
+      .subtitle-container {
+        height: 20px; /* 한 줄 텍스트 높이에 맞춤 */
+        overflow: hidden;
+        position: relative;
+      }
+
+      .subtitle-slider {
+        animation: slide-phrases 12s infinite ease-in-out;
+      }
+
       .subtitle {
         font-size: 16px;
         color: var(--text-muted);
+        height: 20px;
+        line-height: 20px;
+        margin: 0;
+        padding-bottom: 20px; /* 문장 사이의 간격 */
       }
 
       .scanner {
@@ -361,6 +375,24 @@
         }
       }
 
+      @keyframes slide-phrases {
+        0% {
+          transform: translateY(0);
+        }
+        41% {
+          transform: translateY(0);
+        } /* 5초 대기 */
+        50% {
+          transform: translateY(-40px);
+        } /* 1초 슬라이드 */
+        91% {
+          transform: translateY(-40px);
+        } /* 5초 대기 */
+        100% {
+          transform: translateY(-80px);
+        } /* 1초 슬라이드 (루프) */
+      }
+
       @keyframes pulse {
         0% {
           transform: translate(-50%, -50%) scale(0.95);
@@ -441,7 +473,23 @@
     <div class="container">
       <header>
         <h1>모기없는세상</h1>
-        <p class="subtitle">AI 음향 분석으로 당신의 공간을 보호하세요.</p>
+        <div class="subtitle-container">
+          <div class="subtitle-slider">
+            <p class="subtitle">
+              "내게 소원이 무엇이냐고 물으신다면, 나는 서슴지 않고 '모기로부터의
+              완전한 해방'이라 답할 것이다."
+            </p>
+            <p class="subtitle">
+              "나의 소원은 첫째도 숙면이요, 둘째도 숙면이요, 셋째도 모기 없는
+              완전한 숙면이다."
+            </p>
+            <!-- Seamless Loop를 위해 첫 번째 문장 복제 -->
+            <p class="subtitle">
+              "내게 소원이 무엇이냐고 물으신다면, 나는 서슴지 않고 '모기로부터의
+              완전한 해방'이라 답할 것이다."
+            </p>
+          </div>
+        </div>
       </header>
 
       <div class="scanner" id="scanner">
