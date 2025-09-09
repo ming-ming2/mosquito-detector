@@ -1,6 +1,6 @@
 {
   "tfjsSpeechCommandsVersion": "0.4.0",
   "modelName": "TMv2",
-  "timeStamp": "2025-09-07T12:31:35.971Z",
+  "timeStamp": "2025-09-09T14:56:46.207Z",
   "wordLabels": ["모기소리", "배경 소음"]
 }

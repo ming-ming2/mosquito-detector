@@ -2,7 +2,7 @@
   "modelTopology": {
     "class_name": "Model",
     "config": {
-      "name": "model3",
+      "name": "model7",
       "layers": [
         {
           "name": "conv2d_1_input",
@@ -247,10 +247,10 @@
           "inbound_nodes": [[["dropout_1", 0, 0, {}]]]
         },
         {
-          "name": "sequential_7",
+          "name": "sequential_15",
           "class_name": "Sequential",
           "config": {
-            "name": "sequential_7",
+            "name": "sequential_15",
             "layers": [
               {
                 "class_name": "Dense",
@@ -285,7 +285,7 @@
         }
       ],
       "input_layers": [["conv2d_1_input", 0, 0]],
-      "output_layers": [["sequential_7", 1, 0]]
+      "output_layers": [["sequential_15", 1, 0]]
     },
     "keras_version": "tfjs-layers 1.7.4",
     "backend": "tensor_flow.js"

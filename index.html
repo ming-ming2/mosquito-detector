@@ -717,9 +717,9 @@
 
           recognizer.listen((result) => handlePrediction(result.scores), {
             includeSpectrogram: true,
-            probabilityThreshold: 0.3, // 더 민감하게
+            probabilityThreshold: 0.3,
             invokeCallbackOnNoiseAndUnknown: true,
-            overlapFactor: 0.75, // 더 자주 업데이트
+            overlapFactor: 0.75,
           });
 
           isListening = true;
