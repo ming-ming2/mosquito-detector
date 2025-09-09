@@ -90,6 +90,10 @@
         height: 40px; /* Set a fixed height for each item */
         line-height: 40px; /* Vertically center text in the given height */
         margin: 0;
+        white-space: nowrap; /* Prevent text from wrapping to a new line */
+        overflow: hidden; /* Hide overflowing text */
+        text-overflow: ellipsis; /* Show ... for overflowed text */
+        padding: 0 15px; /* Add some side padding */
       }
 
       .scanner {
@@ -392,6 +396,25 @@
         } /* Slide to looped phrase 1 */
       }
 
+      /* Mobile animation */
+      @keyframes slide-phrases-mobile {
+        0% {
+          transform: translateY(0);
+        }
+        45% {
+          transform: translateY(0);
+        } /* Wait on phrase 1 */
+        50% {
+          transform: translateY(-80px);
+        } /* Slide to phrase 2 */
+        95% {
+          transform: translateY(-80px);
+        } /* Wait on phrase 2 */
+        100% {
+          transform: translateY(-160px);
+        } /* Slide to looped phrase 1 */
+      }
+
       @keyframes pulse {
         0% {
           transform: translate(-50%, -50%) scale(0.95);
@@ -452,8 +475,22 @@
         h1 {
           font-size: 28px;
         }
+        .subtitle-container {
+          height: 80px; /* Increase height for two lines */
+        }
         .subtitle {
           font-size: 14px;
+          height: 80px; /* Match container height */
+          white-space: normal; /* Allow text to wrap */
+          line-height: 1.4; /* Normal line spacing */
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-overflow: initial; /* Reset text-overflow */
+          overflow: visible; /* Reset overflow */
+        }
+        .subtitle-slider {
+          animation-name: slide-phrases-mobile;
         }
         .scanner {
           width: 220px;
